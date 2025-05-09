@@ -34,10 +34,15 @@ local Window = Rayfield:CreateWindow({
     }
  })
 
+local plr = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
  local PlayerTab = Window:CreateTab("🏠Menu🏠", nil)
+ local ChangerTab = Window:CreateTab("Changer", nil)
+ local MiscTab = Window:CreateTab("Misc", nil)
  local CreditTab = Window:CreateTab("🏐Credit🏐", nil) -- Title, Image
 
+ --1--
  local Button = PlayerTab:CreateButton({
    Name = "Data Rollback + Rejoin",
    Callback = function()
@@ -72,14 +77,77 @@ local Button = PlayerTab:CreateButton({
     end,
  })
 
-local Toggle = PlayerTab:CreateToggle({
-   Name = "Inf Stamina",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+ local Button = PlayerTab:CreateButton({
+   Name = "InstaSpike",
    Callback = function()
-    game:GetService("Players").LocalPlayer.PlayerScripts.Stamina.Value = 9999999999999
+      local spikeEvent = game:GetService("ReplicatedStorage").Mechanics.Spike
+      RunService.Heartbeat:Connect(function()
+
+      spikeEvent:FireServer(plr:GetMouse().Hit.LookVector * 1.5, 100, "SPIKE")
+      end)
    end,
 })
+
+local Button = PlayerTab:CreateButton({
+   Name = "Constantly Spike",
+   Callback = function()
+      local spikeEvent = game:GetService("ReplicatedStorage").Mechanics.Spike
+      RunService.Heartbeat:Connect(function()
+
+         spikeEvent:FireServer(plr:GetMouse().Hit.LookVector, 100, "SPIKE")
+      end)
+   end,
+})
+
+ local Button = PlayerTab:CreateButton({
+   Name = "Inf Stamina",
+   Callback = function()
+      game:GetService("Players").LocalPlayer.PlayerScripts.Stamina.Value = 9999999999999
+   end,
+})
+
+--2--
+local Slider = ChangerTab:CreateSlider({
+   Name = "Dive length",
+   Range = {0, 50},
+   Increment = 1,
+   Suffix = "DIVELENGTH",
+   CurrentValue = 0,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(value)
+      plr:SetAttribute("DIVELENGTH", value)
+   end,
+})
+
+local Slider = ChangerTab:CreateSlider({
+   Name = "Floatiness",
+   Range = {0, 83.34},
+   Increment = 1,
+   Suffix = "FLOATINESS",
+   CurrentValue = 1,
+   Flag = "Slider2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(value)
+      plr:SetAttribute("FLOATINESS", value)
+   end,
+})
+
+local Label = ChangerTab:CreateLabel("Floatiness - это плавучесть. Этот показатель влияет как долго вы находитесь в воздухе. например для 5'3 норма 65, а для 7'0 норма 83.34", 14329995112, Color3.fromRGB(55, 55, 55), false)
+
+--3--
+local Button = MiscTab:CreateButton({
+   Name = "Remove Court Zones",
+   Callback = function()
+      local courtA = workspace:FindFirstChild("COURT_A")
+      local t1Z = courtA:FindFirstChild("TEAM_1"):FindFirstChild("ZONE")
+      local t2Z = courtA:FindFirstChild("TEAM_2"):FindFirstChild("ZONE")
+      local walls = courtA:FindFirstChild("WALLS")
+
+      t1Z:Destroy()
+      t2Z:Destroy()
+      walls:Destroy()
+   end,
+})
+
 
 local Label = CreditTab:CreateLabel("Credit: Kai", 14329995112, Color3.fromRGB(55, 55, 55), false) -- Title, Icon, Color, IgnoreTheme
 local Label = CreditTab:CreateLabel("Discord: @tolstozhopik", 18810599582, Color3.fromRGB(55, 55, 55), false)
