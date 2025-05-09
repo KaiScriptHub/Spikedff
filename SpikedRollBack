@@ -83,7 +83,7 @@ local Button = PlayerTab:CreateButton({
       local spikeEvent = game:GetService("ReplicatedStorage").Mechanics.Spike
       RunService.Heartbeat:Connect(function()
 
-      spikeEvent:FireServer(plr:GetMouse().Hit.LookVector * 1.5, 100, "SPIKE")
+      spikeEvent:FireServer(plr:GetMouse().Hit.LookVector * 10, 100, "SPIKE")
       end)
    end,
 })
